@@ -1,10 +1,10 @@
 [
     {
-    "id": "1",
+    "id": 1,
     "type": "BMW"
     },
     {
-        "id": "2",
+        "id": 2,
         "type": "Mercedes"
     }
 ]

@@ -25,6 +25,10 @@ const userCars = JSON.parse(
 
 // 2) ROUTE HANDLERS
 
+const userRegistration = (req, res) => {};
+
+const userAuthorization = (req, res) => {};
+
 const getAllUserCars = (req, res) => {
   res.status(200).json({
     status: "success",
@@ -52,6 +56,32 @@ const getAllCarTypes = (req, res) => {
     },
   });
 };
+
+const addCar = (req, res) => {
+  const newId = userCars[userCars.length - 1].id + 1;
+  const newCar = Object.assign({ id: newId }, req.body);
+
+  userCars.push(newCar);
+
+  fs.writeFile(
+    `${__dirname}/dev-data/data/cars.json`,
+    JSON.stringify(userCars),
+    (err) => {
+      res.status(201).json({
+        status: "success",
+        data: {
+          addedCar: newCar,
+        },
+      });
+    }
+  );
+};
+
+const addCarType = (req, res) => {};
+
+const deleteCarType = (req, res) => {};
+
+const deleteCar = (req, res) => {};
 
 // const getAllTours = (req, res) => {
 //   console.log(req.requestTime);
@@ -178,15 +208,21 @@ const getAllCarTypes = (req, res) => {
 var o;
 
 // 3) ROUTES
-// const tourRouter = express.Router();
-// const userRouter = express.Router();
+const userRouter = express.Router();
 const userCarsRouter = express.Router();
+const ownersRouter = express.Router();
+const parkingsRouter = express.Router();
+const ordersRouter = express.Router();
 
-// app.use("/api/v1/tours", tourRouter);
-// app.use("/api/v1/users", userRouter);
+app.use("/api/user/register", userRouter);
+app.use("/api/user/login", userRouter);
 
-//app.use("/api/cars/get", userCarsRouter);
+app.use("/api/cars/get", userCarsRouter);
 app.use("/api/cars/types/get", userCarsRouter);
+app.use("/api/cars/add", userCarsRouter);
+app.use("/api/cars/type/add", userCarsRouter);
+app.use("/api/cars/type/", userCarsRouter);
+app.use("/api/cars/", userCarsRouter);
 
 // tourRouter.route("/").get(getAllTours).post(createTour);
 
@@ -196,11 +232,12 @@ app.use("/api/cars/types/get", userCarsRouter);
 
 // userRouter.route("/:id").get(getUser).patch(updateUser).delete(deleteUser);
 
-//userCarsRouter.route("/").get(getAllUserCars);
-
-userCarsRouter.route("/").get(getAllCarTypes);
+userCarsRouter.route("/").get(getAllUserCars).post(addCar);
+//userCarsRouter.route("/").get(getAllCarTypes);
+//userCarsRouter.route("/").get(add);
 
 // 4) START SERVER
+
 const port = 3000;
 app.listen(port, () => {
   console.log(`App running on port ${port}`);
