@@ -1,6 +1,11 @@
-const fs = require("fs");
 const express = require("express");
 const morgan = require("morgan");
+
+const carsRouter = require("./routes/carsRoutes.js");
+const userRouter = require("./routes/userRoutes.js");
+const ownersRouter = require("./routes/ownersRoutes.js");
+const parkingsRouter = require("./routes/parkingsRoutes.js");
+const ordersRouter = require("./routes/ordersRoutes.js");
 
 const app = express();
 
@@ -19,69 +24,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const userCars = JSON.parse(
-  fs.readFileSync(`${__dirname}/dev-data/data/userCars.json`)
-);
-
 // 2) ROUTE HANDLERS
-
-const userRegistration = (req, res) => {};
-
-const userAuthorization = (req, res) => {};
-
-const getAllUserCars = (req, res) => {
-  res.status(200).json({
-    status: "success",
-    requestedAt: req.requestTime,
-    results: userCars.length,
-    data: {
-      userCars,
-    },
-  });
-};
-
-const getAllCarTypes = (req, res) => {
-  console.log(req.params);
-
-  const id = req.params.id * 1;
-  const carType = userCars.find((el) => el.id === id);
-
-  res.status(200).json({
-    status: "success",
-    requestedAt: req.requestTime,
-    results: userCars.length,
-    data: {
-      carId: id,
-      carTypes: carType,
-    },
-  });
-};
-
-const addCar = (req, res) => {
-  const newId = userCars[userCars.length - 1].id + 1;
-  const newCar = Object.assign({ id: newId }, req.body);
-
-  userCars.push(newCar);
-
-  fs.writeFile(
-    `${__dirname}/dev-data/data/cars.json`,
-    JSON.stringify(userCars),
-    (err) => {
-      res.status(201).json({
-        status: "success",
-        data: {
-          addedCar: newCar,
-        },
-      });
-    }
-  );
-};
-
-const addCarType = (req, res) => {};
-
-const deleteCarType = (req, res) => {};
-
-const deleteCar = (req, res) => {};
 
 // const getAllTours = (req, res) => {
 //   console.log(req.requestTime);
@@ -208,33 +151,15 @@ const deleteCar = (req, res) => {};
 var o;
 
 // 3) ROUTES
-const userRouter = express.Router();
-const userCarsRouter = express.Router();
-const ownersRouter = express.Router();
-const parkingsRouter = express.Router();
-const ordersRouter = express.Router();
+app.use("/api/user", userRouter);
 
-app.use("/api/user/register", userRouter);
-app.use("/api/user/login", userRouter);
+app.use("/api/cars", carsRouter);
 
-app.use("/api/cars/get", userCarsRouter);
-app.use("/api/cars/types/get", userCarsRouter);
-app.use("/api/cars/add", userCarsRouter);
-app.use("/api/cars/type/add", userCarsRouter);
-app.use("/api/cars/type/", userCarsRouter);
-app.use("/api/cars/", userCarsRouter);
+app.use("/api/owners", ownersRouter);
 
-// tourRouter.route("/").get(getAllTours).post(createTour);
+app.use("/api", parkingsRouter);
 
-// tourRouter.route("/:id").get(getTour).patch(updateTour).delete(deleteTour);
-
-// userRouter.route("/").get(getAllUsers).post(createUser);
-
-// userRouter.route("/:id").get(getUser).patch(updateUser).delete(deleteUser);
-
-userCarsRouter.route("/").get(getAllUserCars).post(addCar);
-//userCarsRouter.route("/").get(getAllCarTypes);
-//userCarsRouter.route("/").get(add);
+app.use("/api/orders", ordersRouter);
 
 // 4) START SERVER
 
