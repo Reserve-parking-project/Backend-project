@@ -1,6 +1,11 @@
-const fs = require("fs");
 const express = require("express");
 const morgan = require("morgan");
+
+const carsRouter = require("./routes/carsRoutes.js");
+const userRouter = require("./routes/userRoutes.js");
+const ownersRouter = require("./routes/ownersRoutes.js");
+const parkingsRouter = require("./routes/parkingsRoutes.js");
+const ordersRouter = require("./routes/ordersRoutes.js");
 
 const app = express();
 
@@ -19,39 +24,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const userCars = JSON.parse(
-  fs.readFileSync(`${__dirname}/dev-data/data/userCars.json`)
-);
-
 // 2) ROUTE HANDLERS
-
-const getAllUserCars = (req, res) => {
-  res.status(200).json({
-    status: "success",
-    requestedAt: req.requestTime,
-    results: userCars.length,
-    data: {
-      userCars,
-    },
-  });
-};
-
-const getAllCarTypes = (req, res) => {
-  console.log(req.params);
-
-  const id = req.params.id * 1;
-  const carType = userCars.find((el) => el.id === id);
-
-  res.status(200).json({
-    status: "success",
-    requestedAt: req.requestTime,
-    results: userCars.length,
-    data: {
-      carId: id,
-      carTypes: carType,
-    },
-  });
-};
 
 // const getAllTours = (req, res) => {
 //   console.log(req.requestTime);
@@ -178,30 +151,14 @@ const getAllCarTypes = (req, res) => {
 var o;
 
 // 3) ROUTES
-// const tourRouter = express.Router();
-// const userRouter = express.Router();
-const userCarsRouter = express.Router();
+app.use("/api/user", userRouter);
 
-// app.use("/api/v1/tours", tourRouter);
-// app.use("/api/v1/users", userRouter);
+app.use("/api/cars", carsRouter);
 
-//app.use("/api/cars/get", userCarsRouter);
-app.use("/api/cars/types/get", userCarsRouter);
+app.use("/api/owners", ownersRouter);
 
-// tourRouter.route("/").get(getAllTours).post(createTour);
+app.use("/api", parkingsRouter);
 
-// tourRouter.route("/:id").get(getTour).patch(updateTour).delete(deleteTour);
+app.use("/api/orders", ordersRouter);
 
-// userRouter.route("/").get(getAllUsers).post(createUser);
-
-// userRouter.route("/:id").get(getUser).patch(updateUser).delete(deleteUser);
-
-//userCarsRouter.route("/").get(getAllUserCars);
-
-userCarsRouter.route("/").get(getAllCarTypes);
-
-// 4) START SERVER
-const port = 3000;
-app.listen(port, () => {
-  console.log(`App running on port ${port}`);
-});
+module.exports = app;
