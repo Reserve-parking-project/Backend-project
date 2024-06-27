@@ -1,20 +1,12 @@
-const fs = require("fs");
-const express = require("express");
-
-const userCars = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/userCars.json`)
-);
-
-const getAllOwners = (req, res) => {};
-
-const addNewOwner = (req, res) => {};
-
-const deleteOwner = (req, res) => {};
+const express = require('express');
+const ownerController = require('./../controllers/ownersController');
 
 const router = express.Router();
 
-router.route("/").get(getAllOwners);
-router.route("/add").post(addNewOwner);
-router.route("/:id").delete(deleteOwner);
+router
+  .route('/')
+  .get(ownerController.getAllOwners)
+  .post(ownerController.addNewOwner);
+router.route('/:id').delete(ownerController.deleteOwner);
 
 module.exports = router;
