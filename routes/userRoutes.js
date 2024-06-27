@@ -1,17 +1,9 @@
-const fs = require("fs");
-const express = require("express");
-
-const userCars = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/userCars.json`)
-);
-
-const userRegistration = (req, res) => {};
-
-const userAuthorization = (req, res) => {};
+const express = require('express');
+const userController = require('./../controllers/userController');
 
 const router = express.Router();
 
-router.route("/register").post(userRegistration);
-router.route("/login").post(userAuthorization);
+router.route('/register').post(userController.userRegistration);
+router.route('/login').post(userController.userAuthorization);
 
 module.exports = router;

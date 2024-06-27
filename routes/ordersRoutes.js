@@ -1,20 +1,12 @@
-const fs = require("fs");
-const express = require("express");
-
-const userCars = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/userCars.json`)
-);
-
-const getAllOrders = (req, res) => {};
-
-const addNewOrder = (req, res) => {};
-
-const deleteOrder = (req, res) => {};
+const express = require('express');
+const orderController = require('./../controllers/ordersController');
 
 const router = express.Router();
 
-router.route("/").get(getAllOrders);
-router.route("/add/:dateTo").post(addNewOrder);
-router.route("/delete").delete(deleteOrder);
+router
+  .route('/')
+  .get(orderController.getAllOrders)
+  .delete(orderController.deleteOrder);
+router.route('/:dateTo').post(orderController.addNewOrder);
 
 module.exports = router;
