@@ -5,11 +5,11 @@ const carsRouter = require('./routes/carsRoutes');
 const userRouter = require('./routes/userRoutes');
 const ownersRouter = require('./routes/ownersRoutes');
 const parkingsRouter = require('./routes/parkingsRoutes');
-const ordersRouter = require('./routes/ordersRoutess');
+const ordersRouter = require('./routes/ordersRoutes');
 
 const app = express();
 
-// 1) MIDDLEWARES
+// MIDDLEWARES
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// 3) ROUTES
+// ROUTES
 app.use('/api/user', userRouter);
 
 app.use('/api/cars', carsRouter);
