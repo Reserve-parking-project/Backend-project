@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
 const carSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    required: [true],
-    unique: true,
-  },
   type: {
     type: String,
     required: [true, 'A car must have a type'],
