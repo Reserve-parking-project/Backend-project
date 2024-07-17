@@ -1,3 +1,8 @@
+const Order = require('./../models/ordersModel');
+const Placement = require('./../models/placementsModel');
+const Parking = require('./../models/parkingsModel');
+const Owner = require('./../models/ownersModel');
+
 const fs = require('fs');
 
 const userCars = JSON.parse(
