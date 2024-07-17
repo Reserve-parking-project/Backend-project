@@ -1,8 +1,5 @@
-const fs = require('fs');
-
-const userCars = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/userCars.json`)
-);
+const User = require('./../models/userModel');
+const Account = require('./../models/accountModel');
 
 exports.userRegistration = (req, res) => {};
 

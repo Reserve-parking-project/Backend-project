@@ -1,18 +1,25 @@
 const Car = require('./../models/carsModel');
+const Account = require('./../models/accountModel');
+const Order = require('./../models/ordersModel');
 
-// const userCars = JSON.parse(
-//   fs.readFileSync(`${__dirname}/../dev-data/data/userCars.json`)
-// );
+exports.getAllUserCars = async (req, res) => {
+  try {
+    const cars = await Car.find();
 
-exports.getAllUserCars = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime,
-    // results: userCars.length,
-    // data: {
-    //   userCars,
-    // },
-  });
+    res.status(200).json({
+      status: 'success',
+      requestedAt: req.requestTime,
+      results: cars.length,
+      data: {
+        cars,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };
 
 exports.getAllCarTypes = (req, res) => {
@@ -32,22 +39,24 @@ exports.getAllCarTypes = (req, res) => {
   // });
 };
 
-exports.addCar = (req, res) => {
-  // const newId = userCars[userCars.length - 1].id + 1;
-  // const newCar = Object.assign({ id: newId }, req.body);
-  // userCars.push(newCar);
-  // fs.writeFile(
-  //   `${__dirname}/dev-data/data/cars.json`,
-  //   JSON.stringify(userCars),
-  //   (err) => {
-  //     res.status(201).json({
-  //       status: 'success',
-  //       data: {
-  //         addedCar: newCar,
-  //       },
-  //     });
-  //   }
-  // );
+exports.addCar = async (req, res) => {
+  console.log(req.body);
+
+  try {
+    const newCar = await Car.create(req.body);
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        car: newCar,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
 };
 
 exports.addCarType = (req, res) => {
@@ -70,4 +79,18 @@ exports.addCarType = (req, res) => {
 
 exports.deleteCarType = (req, res) => {};
 
-exports.deleteCar = (req, res) => {};
+exports.deleteCar = async (req, res) => {
+  try {
+    await Car.findByIdAndDelete(req.params.id);
+
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
+};
