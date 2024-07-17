@@ -1,3 +1,6 @@
+const { stat } = require('fs');
+const apiFeatures = require('./../utils/apiFeatures');
+
 const Car = require('./../models/carsModel');
 const Account = require('./../models/accountModel');
 const Order = require('./../models/ordersModel');
@@ -8,7 +11,6 @@ exports.getAllUserCars = async (req, res) => {
 
     res.status(200).json({
       status: 'success',
-      requestedAt: req.requestTime,
       results: cars.length,
       data: {
         cars,
@@ -22,21 +24,27 @@ exports.getAllUserCars = async (req, res) => {
   }
 };
 
-exports.getAllCarTypes = (req, res) => {
+exports.getAllCarTypes = async (req, res) => {
   console.log(req.params);
 
-  const id = req.params.id * 1;
-  // const carType = userCars.find((el) => el.id === id);
+  try {
+    const features = new apiFeatures(Car.find(), req.query).limitFields();
 
-  // res.status(200).json({
-  //   status: 'success',
-  //   requestedAt: req.requestTime,
-  //   results: userCars.length,
-  //   data: {
-  //     carId: id,
-  //     carTypes: carType,
-  //   },
-  // });
+    const types = await features.query;
+
+    res.status(200).json({
+      status: 'success',
+      results: types.length,
+      data: {
+        carTypes: types,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
 };
 
 exports.addCar = async (req, res) => {
