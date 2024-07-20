@@ -5,6 +5,6 @@ const OwnerSchema = new mongoose.Schema({
   parkings: Object,
 });
 
-const Owner = mongoose.model('Account', OwnerSchema);
+const Owner = mongoose.model('Owner', OwnerSchema);
 
 module.exports = Owner;
