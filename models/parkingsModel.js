@@ -10,6 +10,6 @@ const parkingSchema = new mongoose.Schema({
   Places: Object,
 });
 
-const Parking = mongoose.model('Account', parkingSchema);
+const Parking = mongoose.model('Parking', parkingSchema);
 
 module.exports = Parking;
