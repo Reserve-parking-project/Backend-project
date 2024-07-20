@@ -25,8 +25,6 @@ exports.getAllUserCars = async (req, res) => {
 };
 
 exports.getAllCarTypes = async (req, res) => {
-  console.log(req.params);
-
   try {
     const features = new apiFeatures(Car.find(), req.query).limitFields();
 
