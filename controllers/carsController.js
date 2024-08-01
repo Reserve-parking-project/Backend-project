@@ -1,71 +1,54 @@
 const { stat } = require('fs');
+
 const apiFeatures = require('./../utils/apiFeatures');
+const catchAsync = require('./../utils/catchAsync');
 
 const Car = require('./../models/carsModel');
 const Account = require('./../models/accountModel');
 const Order = require('./../models/ordersModel');
 
-exports.getAllUserCars = async (req, res) => {
-  try {
-    const cars = await Car.find();
+const AppError = require('./../utils/appError');
 
-    res.status(200).json({
-      status: 'success',
-      results: cars.length,
-      data: {
-        cars,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+exports.getAllUserCars = catchAsync(async (req, res) => {
+  const cars = await Car.find();
 
-exports.getAllCarTypes = async (req, res) => {
-  try {
-    const features = new apiFeatures(Car.find(), req.query).limitFields();
+  res.status(200).json({
+    status: 'success',
+    results: cars.length,
+    data: {
+      cars,
+    },
+  });
+});
 
-    const types = await features.query;
+exports.getAllCarTypes = catchAsync(async (req, res) => {
+  const features = new apiFeatures(Car.find(), req.query).limitFields();
 
-    res.status(200).json({
-      status: 'success',
-      results: types.length,
-      data: {
-        carTypes: types,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+  const types = await features.query;
 
-exports.addCar = async (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    results: types.length,
+    data: {
+      carTypes: types,
+    },
+  });
+});
+
+exports.addCar = catchAsync(async (req, res) => {
   console.log(req.body);
 
-  try {
-    const newCar = await Car.create(req.body);
+  const newCar = await Car.create(req.body);
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        car: newCar,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err.message,
-    });
-  }
-};
+  res.status(201).json({
+    status: 'success',
+    data: {
+      car: newCar,
+    },
+  });
+});
 
-exports.addCarType = (req, res) => {
+exports.addCarType = catchAsync(async (req, res) => {
   // const lastCar = userCars[userCars.length - 1];
   // const newType = req.body;
   // lastCar.type = newType;
@@ -81,22 +64,19 @@ exports.addCarType = (req, res) => {
   //     });
   //   }
   // );
-};
+});
 
-exports.deleteCarType = (req, res) => {};
+exports.deleteCarType = catchAsync(async (req, res) => {});
 
-exports.deleteCar = async (req, res) => {
-  try {
-    await Car.findByIdAndDelete(req.params.id);
+exports.deleteCar = catchAsync(async (req, res) => {
+  const car = await Car.findByIdAndDelete(req.params.id);
 
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err.message,
-    });
+  if (!car) {
+    return next(new AppError('No car found with that ID', 404));
   }
-};
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
