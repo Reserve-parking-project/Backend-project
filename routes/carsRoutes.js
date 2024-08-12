@@ -1,11 +1,12 @@
 const express = require('express');
 const carsController = require('./../controllers/carsController');
+const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
 router
   .route('/')
-  .get(carsController.getAllUserCars)
+  .get(authController.protect, carsController.getAllUserCars)
   .post(carsController.addCar);
 router
   .route('/types')
