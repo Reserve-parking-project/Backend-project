@@ -13,6 +13,12 @@ router
   .get(carsController.getAllCarTypes)
   .post(carsController.addCarType);
 router.route('/types/:id').delete(carsController.deleteCarType);
-router.route('/:id').delete(carsController.deleteCar);
+router
+  .route('/:id')
+  .delete(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide'),
+    carsController.deleteCar
+  );
 
 module.exports = router;
