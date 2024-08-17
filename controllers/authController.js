@@ -136,8 +136,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  console.log(111);
-  console.log(req);
   console.log(req.params.token);
 
   const hashedToken = crypto
