@@ -3,9 +3,15 @@ const Account = require('./../models/accountModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
-// exports.userRegistration = (req, res) => {};
-
-// exports.userAuthorization = (req, res) => {};
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach((el) => {
+    if (allowedFields.includes(el)) {
+      newObj[el] = obj[el];
+    }
+  });
+  return newObj;
+};
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
@@ -18,3 +24,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.updateMe = catchAsync(async (req, res, next) => {});
+
+exports.deleteMe = catchAsync(async (req, res, next) => {});
